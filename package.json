@@ -8,7 +8,15 @@
     "build": "crassa build",
     "dev": "crassa dev",
     "lint": "crassa lint",
+    "lint-staged": "lint-staged",
     "count": "crassa count-lines"
+  },
+  "pre-commit": "lint-staged",
+  "lint-staged": {
+    "{src,server}/**/*.js": [
+      "eslint . --ext .js --fix",
+      "git add"
+    ]
   },
   "keywords": [],
   "author": "",
