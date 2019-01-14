@@ -7,6 +7,8 @@ import createSagaMiddleware from 'redux-saga'
 import createRootReducer from 'reducers'
 import rootSaga from 'sagas'
 
+import socketMiddleware from './socketMiddleware'
+
 const preloadedState = window.__PRELOADED_STATE__
 
 delete window.__PRELOADED_STATE__
@@ -19,7 +21,8 @@ const middleware = [ sagaMiddleware, routerMiddleware(history) ]
 
 const finalCreateStore = compose(
   applyMiddleware(...middleware),
-  applyMiddleware(createReduxWaitForMiddleware())
+  applyMiddleware(createReduxWaitForMiddleware()),
+  applyMiddleware(socketMiddleware())
 )
 
 const store = createStore(createRootReducer(history), preloadedState || initialState, finalCreateStore)
