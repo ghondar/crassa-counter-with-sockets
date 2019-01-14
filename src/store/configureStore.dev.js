@@ -9,6 +9,8 @@ import createRootReducer from 'reducers'
 import rootSaga from 'sagas'
 import DevTools from 'containers/DevTools'
 
+import socketMiddleware from './socketMiddleware'
+
 export const history = createHistory()
 
 const initialState = {}
@@ -18,6 +20,7 @@ const middleware = [ sagaMiddleware, routerMiddleware(history), createLogger() ]
 const finalCreateStore = compose(
   applyMiddleware(...middleware),
   applyMiddleware(createReduxWaitForMiddleware()),
+  applyMiddleware(socketMiddleware()),
   DevTools.instrument()
 )
 

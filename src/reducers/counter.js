@@ -9,7 +9,7 @@ export default base({
     count: 0
   }
 }).extend({
-  types  : [ 'ADD_COUNT', 'REMOVE_COUNT' ],
+  types  : [ 'ADD_COUNT', 'REMOVE_COUNT', 'NEW_COUNT_FROM_SOCKET' ],
   reducer: (state, action, { types }) =>
     produce(state, draft => {
       switch (action.type) {
@@ -21,6 +21,15 @@ export default base({
           draft.count--
 
           return
+
+        case types.NEW_COUNT_FROM_SOCKET:
+          const {
+            payload: { count }
+          } = action
+
+          draft.count += count
+
+          return
         default:
           return
       }
@@ -29,8 +38,11 @@ export default base({
     getCount: state => state[store].count
   }),
   creators: ({ types }) => ({
-    addCount          : () => ({ type: types.ADD_COUNT }),
-    removeCount       : () => ({ type: types.REMOVE_COUNT }),
-    addCountFromServer: () => ({ type: types.FETCH, [WAIT_FOR_ACTION]: types.FETCH_FULFILLED })
+    addCount                     : () => ({ type: types.ADD_COUNT }),
+    removeCount                  : () => ({ type: types.REMOVE_COUNT }),
+    addCountFromServer           : () => ({ type: types.FETCH, [WAIT_FOR_ACTION]: types.FETCH_FULFILLED }),
+    addCountToSocket             : () => ({ type: types.NEW_COUNT_FROM_SOCKET, event: true, payload: { count: 10 } }),
+    addListenerCountFromSocket   : () => ({ type: types.NEW_COUNT_FROM_SOCKET, event: true, handle: true }),
+    removeListenerCountFromSocket: () => ({ type: types.NEW_COUNT_FROM_SOCKET, event: true, leave: true })
   })
 })
